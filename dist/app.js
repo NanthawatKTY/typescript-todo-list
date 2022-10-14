@@ -25,6 +25,7 @@ function saveData(e) {
 function createList(task) {
     const liEl = document.createElement("li");
     const checkBoxEl = document.createElement("input");
+    const deleteBtnEL = document.createElement("button");
     // Add attributes to checkbox
     checkBoxEl.type = "checkbox";
     checkBoxEl.checked = task.completed;
@@ -33,9 +34,15 @@ function createList(task) {
         task.completed = checkBoxEl.checked;
         updateListData();
     });
+    // Add delete button
+    deleteBtnEL.addEventListener('click', (e) => {
+        deleteListData(task.id);
+    });
+    deleteBtnEL.textContent = "Delete";
     // Add text to li element
     liEl.appendChild(checkBoxEl);
     liEl.append(task.name);
+    liEl.appendChild(deleteBtnEL);
     listTodoEl.append(liEl);
     inputTodoEl.value = '';
 }
@@ -49,4 +56,12 @@ function readListData() {
 // Update data in local storage
 function updateListData() {
     localStorage.setItem("myList", JSON.stringify(tasks));
+}
+// Delete data from local storage
+function deleteListData(taskId) {
+    console.log("Deleted: ", taskId);
+    const index = tasks.findIndex(task => task.id == taskId);
+    tasks.splice(index, 1);
+    localStorage.setItem("myList", JSON.stringify(tasks));
+    location.reload();
 }
